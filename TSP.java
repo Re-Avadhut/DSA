@@ -23,8 +23,15 @@ class TSP {
             // If city is not visited
             if ((mask & (1 << city)) == 0) {
 
-                int cost = dist[pos][city]
-                        + tsp(mask | (1 << city), city);
+                if (dist[pos][city] < 0 || dist[pos][city] == Integer.MAX_VALUE)
+                    continue;
+                int remainder = tsp(mask | (1 << city), city);
+                if (remainder == Integer.MAX_VALUE)
+                    continue;
+                long candidate = (long) dist[pos][city] + remainder;
+                if (candidate > Integer.MAX_VALUE)
+                    continue;
+                int cost = (int) candidate;
 
                 if (cost < ans) {
                     ans = cost;
@@ -46,6 +53,9 @@ class TSP {
         };
 
         n = dist.length;
+
+        if (n == 0 || n > 20)
+            throw new IllegalArgumentException("number of cities must be between 1 and 20");
 
         dp = new int[1 << n][n];
         parent = new int[1 << n][n];

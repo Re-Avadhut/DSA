@@ -25,6 +25,12 @@ public class BoothAlgo {
         int m = sc.nextInt();
         int q = sc.nextInt();
 
+        if (n < 1 || n > 31) {
+            System.out.println("Bit width must be between 1 and 31.");
+            sc.close();
+            return;
+        }
+
         int limit = 1 << (n - 1);
         if (m < -limit || m > limit - 1 || q < -limit || q > limit - 1) {
             System.out.println("Out of range: " + n + "-bit two's complement holds "

@@ -5,6 +5,8 @@ package STS;
 
 class SlidingWindow {
     static int longestOnes(int[] nums, int k) {
+        if (nums == null || k < 0)
+            throw new IllegalArgumentException("array must not be null and k must be non-negative");
         int left = 0;
         int max = 0;
         int zeros = 0;

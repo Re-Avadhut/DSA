@@ -1,7 +1,11 @@
+package STS;
+
 import java.util.*;
 
 class MatrixChain {
     static int cost(int[] p) {
+        if (p == null || p.length < 2)
+            return 0;
         int n = p.length - 1;
         int[][] dp = new int[n][n];
         for (int len = 2; len <= n; len++) {
@@ -9,8 +13,11 @@ class MatrixChain {
                 int j = i + len - 1;
                 dp[i][j] = Integer.MAX_VALUE;
                 for (int k = i; k < j; k++) {
-                    int cost = dp[i][k] + dp[k + 1][j] + (p[i] * p[k + 1] * p[j + 1]);
-                    dp[i][j] = Math.min(dp[i][j], cost);
+                    long candidate = (long) dp[i][k] + dp[k + 1][j]
+                            + (long) p[i] * p[k + 1] * p[j + 1];
+                    if (candidate > Integer.MAX_VALUE)
+                        throw new ArithmeticException("matrix-chain cost overflow");
+                    dp[i][j] = Math.min(dp[i][j], (int) candidate);
                 }
             }
         }

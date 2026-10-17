@@ -1,10 +1,16 @@
 
+package STS;
+
 import java.util.Arrays;
 
 public class OptimalBST {
 
     static int optimalBST(int[] keys, int[] freq) {
+        if (keys == null || freq == null || keys.length != freq.length)
+            throw new IllegalArgumentException("keys and frequencies must have equal lengths");
         int n = keys.length;
+        if (n == 0)
+            return 0;
 
         // dp[i][j] = minimum search cost for keys i to j
         int[][] dp = new int[n][n];

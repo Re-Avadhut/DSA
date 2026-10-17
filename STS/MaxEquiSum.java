@@ -7,6 +7,8 @@ package STS;
 
 public class MaxEquiSum {
     static int maxEquiSum(int[] arr) {
+        if (arr == null)
+            throw new IllegalArgumentException("array must not be null");
         int n = arr.length;
         int res = Integer.MIN_VALUE;
         for (int i = 0; i < n; i++) {
@@ -37,16 +39,18 @@ public class MaxEquiSum {
     }
 
     static int maxEquilibriumSum(int[] arr) {
-        int total = 0;
+        if (arr == null)
+            throw new IllegalArgumentException("array must not be null");
+        long total = 0;
 
         for (int x : arr)
             total += x;
 
-        int leftSum = 0;
-        int maxSum = Integer.MIN_VALUE;
+        long leftSum = 0;
+        long maxSum = Long.MIN_VALUE;
 
         for (int x : arr) {
-            int rightSum = total - leftSum - x;
+            long rightSum = total - leftSum - x;
 
             if (leftSum == rightSum)
                 maxSum = Math.max(maxSum, leftSum);
@@ -54,6 +58,8 @@ public class MaxEquiSum {
             leftSum += x;
         }
 
-        return maxSum;
+        if (maxSum < Integer.MIN_VALUE || maxSum > Integer.MAX_VALUE)
+            throw new ArithmeticException("equilibrium sum does not fit in int");
+        return maxSum == Long.MIN_VALUE ? Integer.MIN_VALUE : (int) maxSum;
     }
 }

@@ -5,12 +5,17 @@ package STS;
 
 public class MaxSumHourglass {
     static int maxSumHourglass(int[][] arr) {
+        if (arr == null || arr.length == 0 || arr[0] == null)
+            return -1;
         int maxSum = Integer.MIN_VALUE;
         int row = arr.length;
         int col = arr[0].length;
         if (row < 3 || col < 3) {
             return -1; // Not enough elements for an hourglass
         }
+        for (int[] current : arr)
+            if (current == null || current.length != col)
+                throw new IllegalArgumentException("matrix must be rectangular");
         for (int i = 0; i < row - 2; i++) {
             for (int j = 0; j < col - 2; j++) {
                 int sum = arr[i][j] + arr[i][j + 1] + arr[i][j + 2]

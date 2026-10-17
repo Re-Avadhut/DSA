@@ -15,7 +15,13 @@ public class BlockSwap {
     }
 
     public static void leftRotate(int[] arr, int d, int n) {
+        if (arr == null || n != arr.length || n < 0)
+            throw new IllegalArgumentException("n must equal arr.length");
+        if (n == 0)
+            return;
         d = d % n;
+        if (d < 0)
+            d += n;
         if (d == 0)
             return;
 

@@ -1,3 +1,5 @@
+package STS;
+
 import java.util.*;
 
 public class TwoSumUsingHashSet {

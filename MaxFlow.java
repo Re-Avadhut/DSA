@@ -2,6 +2,12 @@ import java.util.*;
 
 public class MaxFlow {
     static int maxFlow(int[][] graph, int s, int t, int n) {
+        if (graph == null || graph.length != n || n < 0
+                || s < 0 || s >= n || t < 0 || t >= n || s == t)
+            throw new IllegalArgumentException("invalid flow network");
+        for (int[] row : graph)
+            if (row == null || row.length != n)
+                throw new IllegalArgumentException("capacity matrix must be square");
         int[][] r = new int[n][n];
         for (int i = 0; i < n; i++)
             r[i] = graph[i].clone();
@@ -38,6 +44,8 @@ public class MaxFlow {
                 r[v][u] += path;
             }
 
+            if (path > Integer.MAX_VALUE - flow)
+                throw new ArithmeticException("maximum flow overflow");
             flow += path;
         }
         return flow;

@@ -6,6 +6,8 @@ package STS;
 
 public class MPS {
     static void findMaxProductSubarray(int[] arr, int n) {
+        if (arr == null || n != arr.length || n == 0)
+            throw new IllegalArgumentException("n must equal a non-empty arr.length");
         int maxSoFar = arr[0];
         int minSoFar = arr[0];
         int result = arr[0];

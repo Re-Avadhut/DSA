@@ -8,6 +8,10 @@ import java.util.*;
 
 public class LeadersArray {
     static void leaders(int arr[], int n) {
+        if (arr == null || n != arr.length)
+            throw new IllegalArgumentException("n must equal arr.length");
+        if (n == 0)
+            return;
         int max = arr[n - 1];
         ArrayList<Integer> leaders = new java.util.ArrayList<>();
         leaders.add(max);
