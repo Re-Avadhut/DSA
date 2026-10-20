@@ -1,6 +1,6 @@
 package DAALab;
 
-import java.util.Arrays;
+import java.util.*;
 
 public class kruskals {
 
@@ -18,60 +18,82 @@ public class kruskals {
         }
     }
 
-    static int find(int[] p, int x) {
-        if (p[x] != x)
-            p[x] = find(p, p[x]);
-        return p[x];
+    static int find(int[] parent, int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent, parent[x]);
+
+        return parent[x];
     }
 
-    static boolean union(int[] p, int[] rank, int a, int b) {
-        a = find(p, a);
-        b = find(p, b);
+    static void union(int[] parent, int[] rank, int x, int y) {
+        int rootX = find(parent, x);
+        int rootY = find(parent, y);
 
-        if (a == b)
-            return false;
+        if (rootX == rootY)
+            return;
 
-        if (rank[a] < rank[b])
-            p[a] = b;
-        else if (rank[a] > rank[b])
-            p[b] = a;
+        if (rank[rootX] < rank[rootY])
+            parent[rootX] = rootY;
+        else if (rank[rootX] > rank[rootY])
+            parent[rootY] = rootX;
         else {
-            p[b] = a;
-            rank[a]++;
+            parent[rootY] = rootX;
+            rank[rootX]++;
         }
-        return true;
     }
 
-    static void kruskal(int n, Edge[] edges) {
-        if (n < 0 || edges == null)
-            throw new IllegalArgumentException("invalid graph");
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int m = sc.nextInt();
+
+        Edge[] edges = new Edge[m];
+
+        for (int i = 0; i < m; i++) {
+            int u = sc.nextInt();
+            int v = sc.nextInt();
+            int w = sc.nextInt();
+
+            edges[i] = new Edge(u, v, w);
+        }
+
         Arrays.sort(edges);
 
-        int[] p = new int[n];
+        int[] parent = new int[n];
         int[] rank = new int[n];
-        for (int i = 0; i < n; i++)
-            p[i] = i;
 
-        int total = 0, count = 0;
+        for (int i = 0; i < n; i++)
+            parent[i] = i;
+
+        int total = 0;
+        int count = 0;
+
+        System.out.println("MST Edges:");
 
         for (Edge e : edges) {
-            if (union(p, rank, e.u, e.v)) {
-                System.out.println(e.u + " - " + e.v
-                        + " : " + e.w);
-                if ((e.w > 0 && total > Integer.MAX_VALUE - e.w)
-                        || (e.w < 0 && total < Integer.MIN_VALUE - e.w))
-                    throw new ArithmeticException("MST weight overflow");
+            int x = find(parent, e.u);
+            int y = find(parent, e.v);
+
+            if (x != y) {
+                System.out.println(
+                        e.u + " -> " + e.v + " : " + e.w);
+
+                union(parent, rank, x, y);
+
                 total += e.w;
                 count++;
+
                 if (count == n - 1)
                     break;
             }
         }
 
-        if (count != n - 1)
-            System.out.println("MST not possible");
+        if (count == n - 1)
+            System.out.println("Total MST Cost: " + total);
         else
-            System.out.println("MST weight = " + total);
-    }
+            System.out.println("MST not possible: graph disconnected");
 
+        sc.close();
+    }
 }

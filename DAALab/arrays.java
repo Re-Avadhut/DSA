@@ -3,7 +3,7 @@ package DAALab;
 
 import java.util.*;
 
-class Main {
+public class arrays {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         int n = sc.nextInt();
