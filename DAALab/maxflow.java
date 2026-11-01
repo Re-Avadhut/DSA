@@ -1,18 +1,9 @@
 package DAALab;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
-public class maxflow {
-
+class Main {
     static int maxFlow(int[][] capacity, int n, int s, int t) {
-        if (capacity == null || capacity.length != n || n < 0
-                || s < 0 || s >= n || t < 0 || t >= n || s == t)
-            throw new IllegalArgumentException("invalid flow network");
-        for (int[] row : capacity)
-            if (row == null || row.length != n)
-                throw new IllegalArgumentException("capacity matrix must be square");
         int[][] residual = new int[n][n];
 
         for (int i = 0; i < n; i++)
@@ -21,6 +12,9 @@ public class maxflow {
         int flow = 0;
         int[] parent = new int[n];
 
+        if (s == t)
+            return 0;
+
         while (true) {
             Arrays.fill(parent, -1);
             parent[s] = s;
@@ -28,6 +22,7 @@ public class maxflow {
             Queue<Integer> q = new LinkedList<>();
             q.offer(s);
 
+            // BFS to find an augmenting path
             while (!q.isEmpty() && parent[t] == -1) {
                 int u = q.poll();
 
@@ -39,26 +34,55 @@ public class maxflow {
                 }
             }
 
+            // No more augmenting paths
             if (parent[t] == -1)
                 break;
 
+            // Find bottleneck capacity
             int add = Integer.MAX_VALUE;
-
             for (int v = t; v != s; v = parent[v])
                 add = Math.min(add, residual[parent[v]][v]);
 
+            // Print augmenting path
+            List<Integer> path = new ArrayList<>();
+            for (int v = t; v != s; v = parent[v])
+                path.add(v);
+            path.add(s);
+            Collections.reverse(path);
+
+            System.out.println("Path: " + path);
+            System.out.println("Flow added: " + add);
+
+            // Update residual capacities
             for (int v = t; v != s; v = parent[v]) {
                 int u = parent[v];
                 residual[u][v] -= add;
                 residual[v][u] += add;
             }
 
-            if (add > Integer.MAX_VALUE - flow)
-                throw new ArithmeticException("maximum flow overflow");
             flow += add;
+            System.out.println();
         }
 
+        System.out.println("Maximum Flow = " + flow);
         return flow;
     }
 
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        int n = sc.nextInt();
+        int[][] capacity = new int[n][n];
+
+        // Input capacity matrix
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                capacity[i][j] = sc.nextInt();
+
+        int s = sc.nextInt();
+        int t = sc.nextInt();
+
+        maxFlow(capacity, n, s, t);
+        sc.close();
+    }
 }
