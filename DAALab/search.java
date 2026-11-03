@@ -4,8 +4,7 @@ package DAALab;
 public class search {
 
     static int linearSearch(int[] a, int key) {
-        if (a == null)
-            throw new IllegalArgumentException("array must not be null");
+
         for (int i = 0; i < a.length; i++)
             if (a[i] == key)
                 return i;
@@ -13,8 +12,7 @@ public class search {
     }
 
     static int binarySearch(int[] a, int key) {
-        if (a == null)
-            throw new IllegalArgumentException("array must not be null");
+
         int low = 0, high = a.length - 1;
 
         while (low <= high) {

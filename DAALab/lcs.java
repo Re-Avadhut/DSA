@@ -3,8 +3,7 @@ package DAALab;
 public class lcs {
 
     static int lcs(String s1, String s2) {
-        if (s1 == null || s2 == null)
-            throw new IllegalArgumentException("strings must not be null");
+
         int m = s1.length();
         int n = s2.length();
 

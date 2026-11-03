@@ -2,23 +2,11 @@ package DAALab;
 
 import java.util.*;
 
-public class dijkstra {
-    static final long INF = Long.MAX_VALUE / 4;
+class dijkstra {
+    static final int INF = 99999;
 
-    static void dijkstra(int[][] graph, int src, int dest, int n) {
-        if (graph == null || n < 0 || graph.length != n || src < 0 || src >= n
-                || dest < 0 || dest >= n)
-            throw new IllegalArgumentException("invalid graph or source/destination");
-        for (int[] row : graph)
-            if (row == null || row.length != n)
-                throw new IllegalArgumentException("graph must be square");
-
-        for (int[] row : graph)
-            for (int weight : row)
-                if (weight < 0)
-                    throw new IllegalArgumentException("Dijkstra requires non-negative edge weights");
-
-        long[] dist = new long[n];
+    static void Dijkstra(int[][] graph, int src, int dest, int n) {
+        int[] dist = new int[n];
         int[] parent = new int[n];
         boolean[] visited = new boolean[n];
 
@@ -28,7 +16,7 @@ public class dijkstra {
 
         for (int count = 0; count < n; count++) {
             int u = -1;
-            long min = INF;
+            int min = INF;
 
             for (int i = 0; i < n; i++) {
                 if (!visited[i] && dist[i] < min) {
@@ -44,7 +32,6 @@ public class dijkstra {
 
             for (int v = 0; v < n; v++) {
                 if (!visited[v] && graph[u][v] != 0
-                        && dist[u] <= INF - graph[u][v]
                         && dist[u] + graph[u][v] < dist[v]) {
                     dist[v] = dist[u] + graph[u][v];
                     parent[v] = u;
@@ -72,21 +59,18 @@ public class dijkstra {
     }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        int n = 5;
+        int[][] graph = {
+                { 0, 10, 0, 30, 100 },
+                { 10, 0, 50, 0, 0 },
+                { 0, 50, 0, 20, 10 },
+                { 30, 0, 20, 0, 60 },
+                { 100, 0, 10, 60, 0 }
+        };
 
-        int n = sc.nextInt();
-        int[][] graph = new int[n][n];
+        int src = 0;
+        int dest = 4;
 
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                graph[i][j] = sc.nextInt();
-            }
-        }
-
-        int src = sc.nextInt();
-        int dest = sc.nextInt();
-
-        dijkstra(graph, src, dest, n);
-        sc.close();
+        Dijkstra(graph, src, dest, n);
     }
 }

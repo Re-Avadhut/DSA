@@ -2,16 +2,19 @@ package DAALab;
 
 import java.util.*;
 
-class Main {
-    static boolean bpm(boolean[][] g, int u,
-            boolean[] seen, int[] matchR) {
-        for (int v = 0; v < matchR.length; v++) {
-            if (g[u][v] && !seen[v]) {
-                seen[v] = true;
+class maxbipartitematch {
+    static boolean[][] g;
+    static int[] match;
+    static boolean[] vis;
+    static int n, m;
 
-                if (matchR[v] == -1 ||
-                        bpm(g, matchR[v], seen, matchR)) {
-                    matchR[v] = u;
+    static boolean dfs(int u) {
+        for (int v = 0; v < m; v++) {
+            if (g[u][v] && !vis[v]) {
+                vis[v] = true;
+
+                if (match[v] == -1 || dfs(match[v])) {
+                    match[v] = u;
                     return true;
                 }
             }
@@ -19,43 +22,31 @@ class Main {
         return false;
     }
 
-    static int maxMatching(boolean[][] g, int left, int right) {
-        int[] matchR = new int[right];
-        Arrays.fill(matchR, -1);
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        n = sc.nextInt(); // Left vertices
+        m = sc.nextInt(); // Right vertices
 
+        g = new boolean[n][m];
+        match = new int[m];
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                g[i][j] = sc.nextInt() == 1;
+
+        Arrays.fill(match, -1);
         int count = 0;
 
-        for (int u = 0; u < left; u++) {
-            boolean[] seen = new boolean[right];
-
-            if (bpm(g, u, seen, matchR))
+        for (int u = 0; u < n; u++) {
+            vis = new boolean[m];
+            if (dfs(u))
                 count++;
         }
 
-        System.out.println("Matched pairs:");
-        for (int v = 0; v < right; v++) {
-            if (matchR[v] != -1)
-                System.out.println(matchR[v] + " - " + v);
-        }
+        System.out.println("Maximum Matching = " + count);
 
-        System.out.println("Maximum matching = " + count);
-        return count;
-    }
-
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-
-        int left = sc.nextInt();
-        int right = sc.nextInt();
-
-        boolean[][] g = new boolean[left][right];
-
-        // Input adjacency matrix
-        for (int i = 0; i < left; i++)
-            for (int j = 0; j < right; j++)
-                g[i][j] = sc.nextInt() == 1;
-
-        maxMatching(g, left, right);
-        sc.close();
+        for (int v = 0; v < m; v++)
+            if (match[v] != -1)
+                System.out.println(match[v] + " - " + v);
     }
 }

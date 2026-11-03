@@ -3,97 +3,52 @@ package DAALab;
 import java.util.*;
 
 public class kruskals {
+    static int[] parent;
 
-    static class Edge implements Comparable<Edge> {
-        int u, v, w;
-
-        Edge(int u, int v, int w) {
-            this.u = u;
-            this.v = v;
-            this.w = w;
-        }
-
-        public int compareTo(Edge e) {
-            return Integer.compare(this.w, e.w);
-        }
-    }
-
-    static int find(int[] parent, int x) {
+    static int find(int x) {
         if (parent[x] != x)
-            parent[x] = find(parent, parent[x]);
-
+            parent[x] = find(parent[x]);
         return parent[x];
     }
 
-    static void union(int[] parent, int[] rank, int x, int y) {
-        int rootX = find(parent, x);
-        int rootY = find(parent, y);
-
-        if (rootX == rootY)
-            return;
-
-        if (rank[rootX] < rank[rootY])
-            parent[rootX] = rootY;
-        else if (rank[rootX] > rank[rootY])
-            parent[rootY] = rootX;
-        else {
-            parent[rootY] = rootX;
-            rank[rootX]++;
-        }
+    static void union(int x, int y) {
+        parent[find(x)] = find(y);
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        int n = sc.nextInt();
-        int m = sc.nextInt();
-
-        Edge[] edges = new Edge[m];
+        int n = sc.nextInt(), m = sc.nextInt();
+        int[][] e = new int[m][3];
 
         for (int i = 0; i < m; i++) {
-            int u = sc.nextInt();
-            int v = sc.nextInt();
-            int w = sc.nextInt();
-
-            edges[i] = new Edge(u, v, w);
+            e[i][0] = sc.nextInt();
+            e[i][1] = sc.nextInt();
+            e[i][2] = sc.nextInt();
         }
 
-        Arrays.sort(edges);
+        Arrays.sort(e, (a, b) -> Integer.compare(a[2], b[2]));
 
-        int[] parent = new int[n];
-        int[] rank = new int[n];
-
+        parent = new int[n];
         for (int i = 0; i < n; i++)
             parent[i] = i;
 
-        int total = 0;
-        int count = 0;
+        int cost = 0, count = 0;
 
-        System.out.println("MST Edges:");
+        for (int[] edge : e) {
+            int u = edge[0], v = edge[1];
 
-        for (Edge e : edges) {
-            int x = find(parent, e.u);
-            int y = find(parent, e.v);
+            if (find(u) != find(v)) {
+                union(u, v);
+                System.out.println(u + " -> " + v
+                        + " : " + edge[2]);
+                cost += edge[2];
 
-            if (x != y) {
-                System.out.println(
-                        e.u + " -> " + e.v + " : " + e.w);
-
-                union(parent, rank, x, y);
-
-                total += e.w;
-                count++;
-
-                if (count == n - 1)
+                if (++count == n - 1)
                     break;
             }
         }
 
-        if (count == n - 1)
-            System.out.println("Total MST Cost: " + total);
-        else
-            System.out.println("MST not possible: graph disconnected");
-
+        System.out.println("MST Cost = " + cost);
         sc.close();
     }
 }
